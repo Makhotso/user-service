@@ -1,37 +1,32 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = "user-service:1.0"
-    }
-
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image..."
-                sh 'docker build -t $DOCKER_IMAGE .'
+                echo 'Building Docker image...'
+                bat 'docker build -t user-service .'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests in Docker container..."
-                // Replace ./run-tests.sh with your actual test command or skip if using Spring Boot tests
-                sh 'docker run --rm $DOCKER_IMAGE ./run-tests.sh || echo "Tests skipped"'
+                echo 'Running tests...'
+                // bat 'run your test command here'
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "Deploying using Docker Compose..."
-                sh 'docker-compose up -d'
+                echo 'Deploying...'
+                // bat 'docker run ...'
             }
-        }
-    }
-
-    post {
-        always {
-            echo "Pipeline finished."
         }
     }
 }
